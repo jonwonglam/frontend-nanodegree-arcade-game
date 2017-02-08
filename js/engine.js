@@ -158,14 +158,13 @@ var Engine = (function(global) {
      * the player has won or has died.
      */
     function checkGameover() {
-      if (player.isDead) {
-        gameInfo.resetPoints();
-        reset();
-      }
-      else if (player.y < 1) {
-        gameInfo.addPoints(1000);
-        reset();
-      }
+        if (player.isDead) {
+            gameInfo.resetPoints();
+            reset();
+        } else if (player.y < 1) {
+            gameInfo.addPoints(1000);
+            reset();
+        }
     }
 
     /* This function does nothing but it could have been a good place to
@@ -173,18 +172,18 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-      clearCanvas();
-      setupPlayer(player);
-      gameInfo.render();
+        clearCanvas();
+        setupPlayer(player);
+        gameInfo.render();
     }
 
-  /* This function will create a white rectangle across the entire canvas,
-   * effectively clearing any pixels that don't get drawn over. This is
-   * especially useful to clear the player's head in the water area.
-   */
+    /* This function will create a white rectangle across the entire canvas,
+     * effectively clearing any pixels that don't get drawn over. This is
+     * especially useful to clear the player's head in the water area.
+     */
     function clearCanvas() {
-      ctx.fillStyle = "white";
-      ctx.fillRect(0,0, canvas.width, canvas.height);
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     /* Go ahead and load all of the images we know we're going to need to
