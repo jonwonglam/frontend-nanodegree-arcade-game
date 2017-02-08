@@ -146,8 +146,11 @@ var player = new Player();
 
 var gameInfo = new GameInfo();
 
-// This is called in reset() to generate an array of Enemies
-// each time the game resets.
+/**
+ * Gets called at the beginning of the game to create enemy objects
+ * inside the allEnemies array. This array is used to call update()
+ * on each of the enemy objects in the game engine.
+ */
 var generateEnemies = function() {
     allEnemies.push(new Enemy(3));
     allEnemies.push(new Enemy(1));
