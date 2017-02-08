@@ -12,7 +12,11 @@ Play via [Github pages](https://jonwonglam.github.io/frontend-nanodegree-arcade-
 `git clone https://github.com/jonwonglam/frontend-nanodegree-arcade-game.git`
 
 # Gameplay
-Get points by getting your character to the other side without getting hit by a bug. When you get to the other side you get 1000 points. Being hit by a bug brings your points down to 0. The bugs move faster the more points you have.
+The rules are simple:
+* Get points by getting your character to the water without getting hit by a bug or running out of time.
+* When you get to the other side you get 1000 points plus 3 additional seconds.
+* Being hit by a bug brings your points back down to 0.
+* The bugs move faster the more points you have.
 
 #### Controls
 Left/Right/Up/Down arrows move the character around.
