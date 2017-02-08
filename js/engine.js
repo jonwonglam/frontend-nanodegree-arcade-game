@@ -80,7 +80,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        checkGameover();
+        player.checkGameover();
     }
 
     /* This is called by the update function and loops through all of the
@@ -154,26 +154,13 @@ var Engine = (function(global) {
         player.render();
     }
 
-    /* This function is called in the update() function to check whether
-     * the player has won or has died.
-     */
-    function checkGameover() {
-        if (player.isDead) {
-            gameInfo.resetPoints();
-            reset();
-        } else if (player.y < 1) {
-            gameInfo.addPoints(1000);
-            reset();
-        }
-    }
-
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
         clearCanvas();
-        setupPlayer(player);
+        player.setup();
         gameInfo.render();
     }
 

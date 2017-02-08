@@ -1,16 +1,10 @@
-// Canvas Properties
-var canvasWidth = 505,
-    canvasHeight = 606;
-
-// Sprite Size Properties
-var spriteWidth = 101,
-    spriteHeight = 83;
-
 /* Gameinfo object holds any properties relevent to the game.
- * In this case points is used to store the number of points
- * a player has.
  */
 var GameInfo = function() {
+    this.canvasWidth = 505;
+    this.canvasHeight = 606;
+    this.spriteWidth = 101;
+    this.spriteHeight = 83;
     this.points = 0;
 };
 
@@ -20,7 +14,7 @@ GameInfo.prototype.addPoints = function(points) {
 
 GameInfo.prototype.resetPoints = function() {
     this.points = 0;
-}
+};
 
 GameInfo.prototype.render = function() {
     ctx.font = "25px Arial";
@@ -39,7 +33,7 @@ var Enemy = function(col) {
     this.sprite = 'images/enemy-bug.png';
     this.speed = 80 + Math.random() * 200;
     this.x = -100 - Math.random() * 300;
-    this.y = -30 + spriteHeight * col;
+    this.y = -30 + gameInfo.spriteHeight * col;
     this.width = 80;
     this.height = 60;
     this.offsetY = 90;
@@ -54,7 +48,7 @@ Enemy.prototype.update = function(dt) {
      * If the object is still crossing the screen, then increase it's x pos.
      * If it's made it across the screen, reset it's position with a faster speed.
      */
-    if (this.x < canvasWidth) {
+    if (this.x < gameInfo.canvasWidth) {
         this.x += dt * this.speed;
     } else {
         this.x = -100 - Math.random() * 200;
@@ -89,8 +83,8 @@ Enemy.prototype.render = function() {
  */
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = spriteWidth * 2;
-    this.y = -30 + spriteHeight * 5;
+    this.x = gameInfo.spriteWidth * 2;
+    this.y = -30 + gameInfo.spriteHeight * 5;
     this.width = 60;
     this.height = 40;
     this.offsetX = 20;
@@ -98,8 +92,12 @@ var Player = function() {
     this.isDead = false;
 };
 
-Player.prototype.update = function() {
-
+// This is called in reset() to reset the starting position of the player
+// and reset the isDead flag.
+Player.prototype.setup = function() {
+  this.x = gameInfo.spriteWidth * 2;
+  this.y = -30 + gameInfo.spriteHeight * 5;
+  this.isDead = false;
 };
 
 Player.prototype.render = function() {
@@ -109,6 +107,19 @@ Player.prototype.render = function() {
     // ctx.strokeRect(this.x + this.offsetX, this.y + this.offsetY, this.width, this.height);
 };
 
+/* This function is called in the update() function to check whether
+ * the player has won or has died.
+ */
+Player.prototype.checkGameover = function() {
+    if (this.isDead) {
+        gameInfo.resetPoints();
+        reset();
+    } else if (this.y < 1) {
+        gameInfo.addPoints(1000);
+        reset();
+    }
+}
+
 /* handleInput is called in the eventlistener and will process keypresses
  * to move the player.
  */
@@ -116,35 +127,35 @@ Player.prototype.handleInput = function(key) {
     switch (key) {
         case 'left':
             if (this.x > 0) {
-                this.x -= spriteWidth;
+                this.x -= gameInfo.spriteWidth;
             }
             break;
 
         case 'right':
-            if (this.x < canvasWidth - spriteWidth) {
-                this.x += spriteWidth;
+            if (this.x < gameInfo.canvasWidth - gameInfo.spriteWidth) {
+                this.x += gameInfo.spriteWidth;
             }
             break;
 
         case 'up':
             if (this.y > 0) {
-                this.y -= spriteHeight;
+                this.y -= gameInfo.spriteHeight;
             }
             break;
 
         case 'down':
-            if (this.y < canvasHeight - spriteHeight * 3) {
-                this.y += spriteHeight;
+            if (this.y < gameInfo.canvasHeight - gameInfo.spriteHeight * 3) {
+                this.y += gameInfo.spriteHeight;
             }
             break;
     }
 };
 
 // Instantiate Enemy and Player objects in global scope.
+var gameInfo = new GameInfo();
 var allEnemies = [];
 var player = new Player();
 
-var gameInfo = new GameInfo();
 
 /**
  * Gets called at the beginning of the game to create enemy objects
@@ -160,14 +171,6 @@ var generateEnemies = function() {
     allEnemies.push(new Enemy(2));
     allEnemies.push(new Enemy(4));
 }();
-
-// This is called in reset() to reset the starting position of the player
-// and reset the isDead flag.
-var setupPlayer = function(player) {
-    player.x = spriteWidth * 2;
-    player.y = -30 + spriteHeight * 5;
-    player.isDead = false;
-};
 
 // This listens for key presses and sends the keys to player.handleInput
 document.addEventListener('keyup', function(e) {
