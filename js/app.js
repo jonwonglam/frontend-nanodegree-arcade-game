@@ -6,8 +6,9 @@ var canvasWidth = 505,
 var spriteWidth = 101,
     spriteHeight = 83;
 
-/* Gameinfo object holds any
- *
+/* Gameinfo object holds any properties relevent to the game.
+ * In this case points is used to store the number of points
+ * a player has.
  */
 var GameInfo = function() {
   this.points = 0;
@@ -79,7 +80,13 @@ Enemy.prototype.render = function() {
 
 };
 
-// Our player class
+/**
+ * This is the player object. The x,y properties are used in determining position
+ * on the canvas. Width, height, offsetX, and offsetY are used when calculating
+ * the bounding box of the player object. The game checks whether a collision
+ * has happened by the isDead flag. This is set in the enemy's update() function
+ * if a collision has happened. 
+ */
 var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = spriteWidth * 2;
