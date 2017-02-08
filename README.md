@@ -7,15 +7,9 @@ Udacity Front-End Nanodegree Arcade Game
 
 # Quickstart
 
-#### Method 1
-Play via Github pages [here](https://jonwonglam.github.io/frontend-nanodegree-arcade-game/.).
-
-#### Method 2
-Download the repo zip or clone using:
+Play via [Github pages](https://jonwonglam.github.io/frontend-nanodegree-arcade-game/.), download the repo zip, or clone using:
 
 `git clone https://github.com/jonwonglam/frontend-nanodegree-arcade-game.git`
-
-Open `index.html` to play.
 
 # Gameplay
 Get points by getting your character to the other side without getting hit by a bug. When you get to the other side you get 1000 points. Being hit by a bug brings your points down to 0. The bugs move faster the more points you have.
@@ -28,3 +22,6 @@ Stampede was created using Javascript coupled with HTML5's canvas feature. Udaci
 
 #### Goal
 The goal of this project was to practice using the Pseudoclassical pattern to create classes in Javascript. The classes in this game include the player and enemy objects.
+
+#### Issues
+Currently the game doesn't work on mobile as touch is not supported. This is something I'd like to work on in the future.
