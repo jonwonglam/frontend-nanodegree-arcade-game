@@ -54,9 +54,12 @@ Enemy.prototype.update = function(dt) {
         this.x = -100 - Math.random() * 200;
         this.speed = 50 + Math.random() * 200 + gameInfo.points / 50;
     }
+};
 
-    // Check for collision with player, if so then set isDead flag to true
-    // which is checked by checkGameOver().
+/* Check for collision with player, if so then set isDead flag to true
+ * which is checked by checkGameOver().
+ */
+Enemy.prototype.checkCollisions = function() {
     if (this.y + this.offsetY < player.y + player.offsetY &&
         this.y + this.height + this.offsetY > player.y + player.offsetY &&
         this.x < player.x + player.offsetX + player.width &&
@@ -95,9 +98,9 @@ var Player = function() {
 // This is called in reset() to reset the starting position of the player
 // and reset the isDead flag.
 Player.prototype.setup = function() {
-  this.x = gameInfo.spriteWidth * 2;
-  this.y = -30 + gameInfo.spriteHeight * 5;
-  this.isDead = false;
+    this.x = gameInfo.spriteWidth * 2;
+    this.y = -30 + gameInfo.spriteHeight * 5;
+    this.isDead = false;
 };
 
 Player.prototype.render = function() {
@@ -118,7 +121,7 @@ Player.prototype.checkGameover = function() {
         gameInfo.addPoints(1000);
         reset();
     }
-}
+};
 
 /* handleInput is called in the eventlistener and will process keypresses
  * to move the player.
