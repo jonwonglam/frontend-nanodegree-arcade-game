@@ -3,7 +3,7 @@ Udacity Front-End Nanodegree Arcade Game
 
 [Stampede](https://github.com/jonwonglam/frontend-nanodegree-arcade-game) is a Frogger Clone built during the [Udacity Front-End Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) course. You play as a princess who's land has been overrun by stampeding bugs. You must escape your land and get points each time you make it the ocean without being crushed. What happened to everyone else? Who knows...
 
-![alt tag](./images/screenshot.png)
+![alt tag](./images/screenshot.jpg)
 
 # Quickstart
 
