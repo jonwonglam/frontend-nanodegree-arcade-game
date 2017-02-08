@@ -7,12 +7,15 @@ Udacity Front-End Nanodegree Arcade Game
 
 # Quickstart
 
-#### Install
+#### Method 1
+Play via Github pages [here](https://jonwonglam.github.io/frontend-nanodegree-arcade-game/.).
+
+#### Method 2
 Download the repo zip or clone using:
 
 `git clone https://github.com/jonwonglam/frontend-nanodegree-arcade-game.git`
 
-Open `index.html` to load the game.
+Open `index.html` to play.
 
 # Gameplay
 Get points by getting your character to the other side without getting hit by a bug. When you get to the other side you get 1000 points. Being hit by a bug brings your points down to 0. The bugs move faster the more points you have.
