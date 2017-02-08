@@ -1,39 +1,166 @@
-// Enemies our player must avoid
-var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+// Canvas Properties
+var canvasWidth = 505,
+    canvasHeight = 606;
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
+// Sprite Size Properties
+var spriteWidth = 101,
+    spriteHeight = 83;
+
+/* Gameinfo object holds any
+ *
+ */
+var GameInfo = function() {
+  this.points = 0;
 };
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+GameInfo.prototype.addPoints = function(points) {
+  this.points += points;
+};
+
+GameInfo.prototype.resetPoints = function() {
+  this.points = 0;
+}
+
+GameInfo.prototype.render = function() {
+  ctx.font = "25px Arial";
+  ctx.fillStyle = "black";
+  ctx.fillText("Points: " + this.points,10,30);
+};
+
+/* Enemies our player must avoid
+ * speed: speed at which the sprite moves each update().
+ * x,y: starting position of the sprite.
+ * width/height: correspond to the bounding box, used to detect
+ * collisions in update().
+ * offset: bounding box offset.
+ */
+var Enemy = function(col) {
+    this.sprite = 'images/enemy-bug.png';
+    this.speed = 80 + Math.random() * 200;
+    this.x = -100 - Math.random() * 300;
+    this.y = -30 + spriteHeight * col;
+    this.width = 80;
+    this.height = 60;
+    this.offsetY = 90;
+};
+
+/* Call this function to update an enemy's position and check for collisions.
+ * If the position is outside the canvas, generate a new starting position and speed.
+ * @ Parameter: dt, a time delta between ticks
+ */
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    /* Update enemy position.
+     * If the object is still crossing the screen, then increase it's x pos.
+     * If it's made it across the screen, reset it's position with a faster speed.
+     */
+    if (this.x < canvasWidth) {
+        this.x += dt * this.speed;
+    } else {
+        this.x = -100 - Math.random() * 200;
+        this.speed = 50 + Math.random() * 200 + gameInfo.points / 50;
+    }
+
+    // Check for collision with player, if so then set isDead flag to true
+    // which is checked by checkGameOver().
+    if (this.y + this.offsetY < player.y + player.offsetY &&
+        this.y + this.height + this.offsetY > player.y + player.offsetY &&
+        this.x < player.x + player.offsetX + player.width &&
+        this.x + this.width > player.x + player.offsetX) {
+          player.isDead = true;
+        }
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+    /* Uncomment this line to see the enemy's bounding box */
+    // ctx.strokeRect(this.x, this.y + this.offsetY, this.width, this.height);
+
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// Our player class
+var Player = function() {
+    this.sprite = 'images/char-boy.png';
+    this.x = spriteWidth * 2;
+    this.y = -30 + spriteHeight * 5;
+    this.width = 60;
+    this.height = 40;
+    this.offsetX = 20;
+    this.offsetY = 100;
+    this.isDead = false;
+};
+
+Player.prototype.update = function() {
+
+};
+
+Player.prototype.render = function() {
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
+  /* Uncomment this line to see the player's bounding box */
+  // ctx.strokeRect(this.x + this.offsetX, this.y + this.offsetY, this.width, this.height);
+};
+
+/* handleInput is called in the eventlistener and will process keypresses
+ * to move the player.
+ */
+Player.prototype.handleInput = function(key) {
+  switch (key) {
+    case 'left':
+      if (this.x > 0) {
+        this.x -= spriteWidth;
+      }
+      break;
+
+    case 'right':
+      if (this.x < canvasWidth - spriteWidth) {
+        this.x += spriteWidth;
+      }
+      break;
+
+    case 'up':
+      if (this.y > 0) {
+        this.y -= spriteHeight;
+      }
+      break;
+
+    case 'down':
+      if (this.y < canvasHeight - spriteHeight * 3) {
+        this.y += spriteHeight;
+      }
+      break;
+  }
+};
+
+// Instantiate Enemy and Player objects in global scope.
+var allEnemies = [];
+var player = new Player();
+
+var gameInfo = new GameInfo();
 
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+// This is called in reset() to generate an array of Enemies
+// each time the game resets.
+var generateEnemies = function() {
+  allEnemies.push(new Enemy(3));
+  allEnemies.push(new Enemy(1));
+  allEnemies.push(new Enemy(2));
+  allEnemies.push(new Enemy(1));
+  allEnemies.push(new Enemy(3));
+  allEnemies.push(new Enemy(2));
+  allEnemies.push(new Enemy(4));
+}();
 
+// This is called in reset() to reset the starting position of the player
+// and reset the isDead flag.
+var setupPlayer = function(player) {
+  player.x = spriteWidth * 2;
+  player.y = -30 + spriteHeight * 5;
+  player.isDead = false;
+};
 
-
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// This listens for key presses and sends the keys to player.handleInput
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',

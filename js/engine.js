@@ -80,7 +80,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkGameover();
     }
 
     /* This is called by the update function and loops through all of the
@@ -94,7 +94,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
+        // player.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -108,12 +108,13 @@ var Engine = (function(global) {
          * for that particular row of the game level.
          */
         var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
+                'images/water-block.png', // Top row is water
+                'images/stone-block.png', // Row 1 of 4 of stone
+                'images/stone-block.png', // Row 2 of 4 of stone
+                'images/stone-block.png', // Row 3 of 4 of stone
+                'images/stone-block.png', // Row 4 of 4 of stone
+                'images/grass-block.png', // Row 1 of 2 of grass
+                'images/grass-block.png' // Row 2 of 2 of grass
             ],
             numRows = 6,
             numCols = 5,
@@ -154,12 +155,37 @@ var Engine = (function(global) {
         player.render();
     }
 
+    /* This function is called in the update() function to check whether
+     * the player has won or has died.
+     */
+    function checkGameover() {
+      if (player.isDead) {
+        gameInfo.resetPoints();
+        reset();
+      }
+      else if (player.y < 1) {
+        gameInfo.addPoints(1000);
+        reset();
+      }
+    }
+
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+      clearCanvas();
+      setupPlayer(player);
+      gameInfo.render();
+    }
+
+  /* This function will create a white rectangle across the entire canvas,
+   * effectively clearing any pixels that don't get drawn over. This is
+   * especially useful to clear the player's head in the water area.
+   */
+    function clearCanvas() {
+      ctx.fillStyle = "white";
+      ctx.fillRect(0,0, canvas.width, canvas.height);
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -180,4 +206,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+    global.reset = reset;
 })(this);

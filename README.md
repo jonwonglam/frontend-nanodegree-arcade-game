@@ -1,6 +1,25 @@
-frontend-nanodegree-arcade-game
+Udacity Front-End Nanodegree Stampede
 ===============================
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+[Stampede](https://github.com/jonwonglam/frontend-nanodegree-arcade-game) is a Frogger Clone built during the [Udacity Front-End Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) course. You play as a princess who's land has been overrun by stampeding bugs. You must escape your land and get points each time you make it the ocean without being crushed. What happened to everyone else? Who knows...
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+# Quickstart
+
+#### Install
+Download the repo zip or clone using:
+
+`git clone https://github.com/jonwonglam/frontend-nanodegree-arcade-game.git`
+
+Open `index.html` to load the game.
+
+# Gameplay
+Get points by getting your character to the other side without getting hit by a bug. When you get to the other side you get 1000 points. Being hit by a bug brings your points down to 0. The bugs move faster the more points you have.
+
+#### Controls
+Left/Right/Up/Down arrows move the character around.
+
+# About the Game
+Stampede was created using Javascript coupled with HTML5's canvas feature. Udacity provided [starter code](https://github.com/udacity/frontend-nanodegree-arcade-game) that included sprites, a basic game engine, and the level design. 
+
+#### Goal
+The goal of this project was to practice using the Pseudoclassical pattern to create classes in Javascript. The classes in this game include the player and enemy objects.
