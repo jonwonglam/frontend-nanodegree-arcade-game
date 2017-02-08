@@ -1,25 +1,73 @@
 /* Gameinfo object holds any properties relevent to the game.
  */
 var GameInfo = function() {
-    this.canvasWidth = 505;
-    this.canvasHeight = 606;
-    this.spriteWidth = 101;
-    this.spriteHeight = 83;
+    this.CANVAS_WIDTH = 505;
+    this.CANVAS_HEIGHT = 606;
+    this.SPRITE_WIDTH = 101;
+    this.SPRITE_HEIGHT = 83;
     this.points = 0;
+    this.highscore = 0;
+    this.secsLeft = 20;
+    this.timeNow = Date.now();
+    this.lastTime = Date.now();
 };
 
 GameInfo.prototype.addPoints = function(points) {
     this.points += points;
 };
 
-GameInfo.prototype.resetPoints = function() {
-    this.points = 0;
+GameInfo.prototype.addTime = function(secs) {
+    this.secsLeft += secs;
 };
 
+GameInfo.prototype.reset = function() {
+    if (this.points > this.highscore) {
+      this.highscore = this.points;
+    }
+    this.points = 0;
+    this.secsLeft = 20;
+};
+
+/* This function will update the game time property as well as render
+ * the time left. Gets called in the update() function.
+ */
+GameInfo.prototype.update = function() {
+    this.timeNow = Date.now();
+    if (this.timeNow - this.lastTime >= 1000) {
+      this.secsLeft--;
+      this.lastTime = Date.now();
+      ctx.fillStyle = "white";
+      ctx.fillRect(400, 0, 130, 50);
+      ctx.font = "22px Arial";
+      ctx.fillStyle = "black";
+      ctx.fillText("Time: " + this.secsLeft, 400, 30);
+    }
+};
+
+/* This function renders the points, the default starting time,
+ * and the highscore. Gets called in the reset() function.
+ */
 GameInfo.prototype.render = function() {
-    ctx.font = "25px Arial";
+    ctx.font = "22px Arial";
     ctx.fillStyle = "black";
     ctx.fillText("Points: " + this.points, 10, 30);
+    ctx.fillText("Time: " + this.secsLeft, 400, 30);
+    ctx.font = "18px Arial";
+    ctx.fillText("High Score: " + this.highscore, 190, 27);
+};
+
+/* This function is called in the update() function to check whether
+ * the player has won, died, or ran out of time.
+ */
+GameInfo.prototype.checkGameover = function(player) {
+    if (player.isDead || this.secsLeft < 0) {
+        this.reset();
+        reset();
+    } else if (player.y < 1) {
+        this.addPoints(1000);
+        this.addTime(2);
+        reset();
+    }
 };
 
 /* Enemies our player must avoid
@@ -33,7 +81,7 @@ var Enemy = function(col) {
     this.sprite = 'images/enemy-bug.png';
     this.speed = 80 + Math.random() * 200;
     this.x = -100 - Math.random() * 300;
-    this.y = -30 + gameInfo.spriteHeight * col;
+    this.y = -30 + gameInfo.SPRITE_HEIGHT * col;
     this.width = 80;
     this.height = 60;
     this.offsetY = 90;
@@ -48,7 +96,7 @@ Enemy.prototype.update = function(dt) {
      * If the object is still crossing the screen, then increase it's x pos.
      * If it's made it across the screen, reset it's position with a faster speed.
      */
-    if (this.x < gameInfo.canvasWidth) {
+    if (this.x < gameInfo.CANVAS_WIDTH) {
         this.x += dt * this.speed;
     } else {
         this.x = -100 - Math.random() * 200;
@@ -74,7 +122,6 @@ Enemy.prototype.render = function() {
 
     /* Uncomment this line to see the enemy's bounding box */
     // ctx.strokeRect(this.x, this.y + this.offsetY, this.width, this.height);
-
 };
 
 /**
@@ -86,8 +133,8 @@ Enemy.prototype.render = function() {
  */
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = gameInfo.spriteWidth * 2;
-    this.y = -30 + gameInfo.spriteHeight * 5;
+    this.x = gameInfo.SPRITE_WIDTH * 2;
+    this.y = -30 + gameInfo.SPRITE_HEIGHT * 5;
     this.width = 60;
     this.height = 40;
     this.offsetX = 20;
@@ -98,8 +145,8 @@ var Player = function() {
 // This is called in reset() to reset the starting position of the player
 // and reset the isDead flag.
 Player.prototype.setup = function() {
-    this.x = gameInfo.spriteWidth * 2;
-    this.y = -30 + gameInfo.spriteHeight * 5;
+    this.x = gameInfo.SPRITE_WIDTH * 2;
+    this.y = -30 + gameInfo.SPRITE_HEIGHT * 5;
     this.isDead = false;
 };
 
@@ -110,19 +157,6 @@ Player.prototype.render = function() {
     // ctx.strokeRect(this.x + this.offsetX, this.y + this.offsetY, this.width, this.height);
 };
 
-/* This function is called in the update() function to check whether
- * the player has won or has died.
- */
-Player.prototype.checkGameover = function() {
-    if (this.isDead) {
-        gameInfo.resetPoints();
-        reset();
-    } else if (this.y < 1) {
-        gameInfo.addPoints(1000);
-        reset();
-    }
-};
-
 /* handleInput is called in the eventlistener and will process keypresses
  * to move the player.
  */
@@ -130,25 +164,25 @@ Player.prototype.handleInput = function(key) {
     switch (key) {
         case 'left':
             if (this.x > 0) {
-                this.x -= gameInfo.spriteWidth;
+                this.x -= gameInfo.SPRITE_WIDTH;
             }
             break;
 
         case 'right':
-            if (this.x < gameInfo.canvasWidth - gameInfo.spriteWidth) {
-                this.x += gameInfo.spriteWidth;
+            if (this.x < gameInfo.CANVAS_WIDTH - gameInfo.SPRITE_WIDTH) {
+                this.x += gameInfo.SPRITE_WIDTH;
             }
             break;
 
         case 'up':
             if (this.y > 0) {
-                this.y -= gameInfo.spriteHeight;
+                this.y -= gameInfo.SPRITE_HEIGHT;
             }
             break;
 
         case 'down':
-            if (this.y < gameInfo.canvasHeight - gameInfo.spriteHeight * 3) {
-                this.y += gameInfo.spriteHeight;
+            if (this.y < gameInfo.CANVAS_HEIGHT - gameInfo.SPRITE_HEIGHT * 3) {
+                this.y += gameInfo.SPRITE_HEIGHT;
             }
             break;
     }

@@ -80,7 +80,8 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        player.checkGameover();
+        gameInfo.update();
+        gameInfo.checkGameover(player);
     }
 
     /* This is called by the update function and loops through all of the
